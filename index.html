@@ -102,7 +102,7 @@
         autoplay 
         animation-crossfade-duration="0"
         auto-rotate="false" 
-        camera-orbit="-20deg 65deg 165%" 
+        camera-orbit="-20deg 65deg 150%" 
         camera-target="0m 0.15m 0m"
         loading="eager" 
         interaction-prompt="none">
@@ -113,7 +113,7 @@
 
         const resetToZero = () => {
             mv.fieldOfView = "auto"; 
-            mv.cameraOrbit = "-20deg 65deg 165%"; // Musi być spójne z HTML
+            mv.cameraOrbit = "-20deg 65deg 150%"; 
             mv.cameraTarget = "0m 0.15m 0m";
             mv.jumpCameraToGoal();
         };
