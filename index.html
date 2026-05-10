@@ -102,7 +102,7 @@
         autoplay 
         animation-crossfade-duration="0"
         auto-rotate="false" 
-        camera-orbit="-20deg 65deg 150%" 
+        camera-orbit="-20deg 65deg 130%" 
         camera-target="0m 0.15m 0m"
         loading="eager" 
         interaction-prompt="none">
@@ -111,24 +111,28 @@
     <script>
         const mv = document.querySelector('#clock-model');
 
+        // Funkcja Resetu
         const resetToZero = () => {
             mv.fieldOfView = "auto"; 
-            mv.cameraOrbit = "-20deg 65deg 150%"; 
+            mv.cameraOrbit = "-20deg 65deg 130%"; 
             mv.cameraTarget = "0m 0.15m 0m";
             mv.jumpCameraToGoal();
         };
 
         document.querySelector('#reset-view').onclick = resetToZero;
 
+        // Panele info
         const togglePanel = (id) => {
             const p = document.getElementById(id);
-            const other = id === 'panel-alta' ? 'panel-czasowniki' : 'panel-alta';
-            document.getElementById(other).classList.remove('visible');
+            const otherId = id === 'panel-alta' ? 'panel-czasowniki' : 'panel-alta';
+            document.getElementById(otherId).classList.remove('visible');
             p.classList.toggle('visible');
         };
+
         document.getElementById('toggle-alta').onclick = () => togglePanel('panel-alta');
         document.getElementById('toggle-czasowniki').onclick = () => togglePanel('panel-czasowniki');
 
+        // Motyw kolorystyczny
         document.getElementById('theme-toggle').onclick = () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -136,10 +140,11 @@
             document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#121212' : '#ffffff');
         };
 
+        // Pauza
         const pauseBtn = document.getElementById('pause-toggle');
         pauseBtn.onclick = () => {
-            const isP = (pauseBtn.getAttribute('data-paused') === "true");
-            if (!isP) {
+            const isPaused = (pauseBtn.getAttribute('data-paused') === "true");
+            if (!isPaused) {
                 mv.pause();
                 document.getElementById('icon-pause').style.display = 'none';
                 document.getElementById('icon-play').style.display = 'block';
@@ -152,15 +157,21 @@
             }
         };
 
+        // Obsługa AR / Fullscreen
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const actionBtn = document.getElementById('action-toggle');
+        
         if (isMobile) {
             document.getElementById('ar-label').style.display = 'flex';
-            document.getElementById('action-toggle').onclick = () => mv.activateAR();
+            actionBtn.onclick = () => mv.activateAR();
         } else {
             document.getElementById('fs-icon').style.display = 'block';
-            document.getElementById('action-toggle').onclick = () => {
-                if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-                else document.exitFullscreen();
+            actionBtn.onclick = () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
             };
         }
     </script>
