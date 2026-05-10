@@ -109,19 +109,17 @@
     </model-viewer>
 
     <script>
+        // TE WARTOŚCI MUSZĄ BYĆ IDENTYCZNE JAK W MODEL-VIEWER POWYŻEJ
         const CONFIG = {
-            // "Wersja 0" - Szeroki kadr po kliknięciu resetu
-            mobileResetOrbit: "0deg 75deg 210%", 
-            desktopResetOrbit: "0deg 75deg 230%",
+            orbit: "-20deg 65deg 125%", 
             target: "0m 0.15m 0m"
         };
 
         const mv = document.querySelector('#clock-model');
 
-        // Funkcja Resetu
+        // Reset przywraca DOKŁADNIE to co na starcie (kąt i powiększenie)
         document.querySelector('#reset-view').onclick = () => {
-            const isMob = window.innerWidth < 768;
-            mv.cameraOrbit = isMob ? CONFIG.mobileResetOrbit : CONFIG.desktopResetOrbit;
+            mv.cameraOrbit = CONFIG.orbit;
             mv.cameraTarget = CONFIG.target;
         };
 
