@@ -101,26 +101,27 @@
         autoplay 
         animation-crossfade-duration="0"
         auto-rotate="false" 
-        camera-orbit="-30deg 65deg 130%" 
-        camera-target="0m 0.12m 0m"
+        camera-orbit="-20deg 75deg 125%" 
+        camera-target="0m 0.10m 0m"
         loading="eager" interaction-prompt="none">
     </model-viewer>
 
     <script>
         const CONFIG = {
-            // Zmienione wartości dla lepszego kąta i większego rozmiaru
-            mobileOrbit: "-30deg 70deg 120%", 
-            desktopOrbit: "-30deg 65deg 130%",
-            mobileTarget: "0m 0.14m 0m",
-            desktopTarget: "0m 0.12m 0m"
+            // RESET do wersji oddalonej (Szeroki kadr)
+            mobileResetOrbit: "0deg 75deg 210%", 
+            desktopResetOrbit: "0deg 75deg 230%",
+            mobileTarget: "0m 0.10m 0m",
+            desktopTarget: "0m 0.10m 0m"
         };
 
         const mv = document.querySelector('#clock-model');
 
         document.querySelector('#reset-view').onclick = () => {
             const isMob = window.innerWidth < 768;
-            mv.cameraOrbit = isMob ? CONFIG.mobileOrbit : CONFIG.desktopOrbit;
+            mv.cameraOrbit = isMob ? CONFIG.mobileResetOrbit : CONFIG.desktopResetOrbit;
             mv.cameraTarget = isMob ? CONFIG.mobileTarget : CONFIG.desktopTarget;
+            mv.fieldOfView = "auto";
         };
 
         const togglePanel = (id) => {
