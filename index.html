@@ -15,7 +15,11 @@
             -webkit-font-smoothing: antialiased;
         }
         body.dark-mode { --bg-color: #121212; }
-        model-viewer { width: 100%; height: 100%; background-color: transparent; outline: none; display: block; }
+        /* touch-action: pan-y zapobiega dziwnym skokom na mobile przy tapnięciu */
+        model-viewer { 
+            width: 100%; height: 100%; background-color: transparent; outline: none; display: block;
+            touch-action: pan-y; 
+        }
         model-viewer::part(default-ar-button) { display: none !important; }
 
         .ui-element {
@@ -96,6 +100,7 @@
         src="ALTA.glb" 
         ar ar-modes="webxr scene-viewer quick-look" 
         camera-controls
+        disable-tap
         max-camera-orbit="auto auto 400%"
         shadow-intensity="1" shadow-softness="1"
         exposure="1.8" environment-intensity="1.5"
@@ -111,7 +116,7 @@
     <script>
         const mv = document.querySelector('#clock-model');
 
-        // Funkcja Resetu
+        // Reset
         const resetToZero = () => {
             mv.fieldOfView = "auto"; 
             mv.cameraOrbit = "-20deg 65deg 130%"; 
@@ -120,6 +125,12 @@
         };
 
         document.querySelector('#reset-view').onclick = resetToZero;
+
+        // BLOKADA RESETU PRZY TAPNIĘCIU
+        // Ta funkcja zapobiega focusowaniu modelu przy kliknięciu, co wyłącza "automatyczny reset"
+        mv.addEventListener('mousedown', (ev) => {
+            if (ev.detail > 1) ev.preventDefault(); // Blokuje double click
+        }, { passive: false });
 
         // Panele info
         const togglePanel = (id) => {
@@ -132,7 +143,7 @@
         document.getElementById('toggle-alta').onclick = () => togglePanel('panel-alta');
         document.getElementById('toggle-czasowniki').onclick = () => togglePanel('panel-czasowniki');
 
-        // Motyw kolorystyczny
+        // Dark mode
         document.getElementById('theme-toggle').onclick = () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -157,7 +168,7 @@
             }
         };
 
-        // Obsługa AR / Fullscreen
+        // AR / FS
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         const actionBtn = document.getElementById('action-toggle');
         
@@ -167,11 +178,8 @@
         } else {
             document.getElementById('fs-icon').style.display = 'block';
             actionBtn.onclick = () => {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
-                } else {
-                    document.exitFullscreen();
-                }
+                if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+                else document.exitFullscreen();
             };
         }
     </script>
