@@ -96,31 +96,29 @@
         src="ALTA.glb" 
         ar ar-modes="webxr scene-viewer quick-look" 
         camera-controls
-        min-camera-orbit="auto auto auto"
-        max-camera-orbit="auto auto 600%"
+        min-camera-orbit="auto auto 0.2m"
+        max-camera-orbit="auto auto 2m"
         shadow-intensity="1" shadow-softness="1"
         exposure="1.8" environment-intensity="1.5"
         autoplay 
         animation-crossfade-duration="0"
         auto-rotate="false" 
-        camera-orbit="-20deg 65deg 125%" 
+        camera-orbit="-20deg 65deg 0.6m" 
         camera-target="0m 0.15m 0m"
         loading="eager" interaction-prompt="none">
     </model-viewer>
 
     <script>
-        // TE WARTOŚCI MUSZĄ BYĆ IDENTYCZNE JAK W MODEL-VIEWER POWYŻEJ
-        const CONFIG = {
-            orbit: "-20deg 65deg 125%", 
-            target: "0m 0.15m 0m"
-        };
+        // TE WARTOŚCI SĄ IDENTYCZNE Z TYMI W MODEL-VIEWER
+        const BASE_ORBIT = "-20deg 65deg 0.6m";
+        const BASE_TARGET = "0m 0.15m 0m";
 
         const mv = document.querySelector('#clock-model');
 
-        // Reset przywraca DOKŁADNIE to co na starcie (kąt i powiększenie)
+        // Funkcja Resetu - Teraz używa tych samych jednostek miary
         document.querySelector('#reset-view').onclick = () => {
-            mv.cameraOrbit = CONFIG.orbit;
-            mv.cameraTarget = CONFIG.target;
+            mv.cameraOrbit = BASE_ORBIT;
+            mv.cameraTarget = BASE_TARGET;
         };
 
         // Panele info
