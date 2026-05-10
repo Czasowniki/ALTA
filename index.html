@@ -98,9 +98,10 @@
         camera-controls disable-pan
         shadow-intensity="1" shadow-softness="1"
         exposure="1.8" environment-intensity="1.5"
-        autoplay auto-rotate rotation-per-second="0deg"
+        autoplay 
+        animation-crossfade-duration="0"
+        auto-rotate="false" 
         camera-orbit="0deg 75deg 175%" camera-target="0m 0.12m 0m"
-        min-camera-orbit="auto auto 100%" max-camera-orbit="auto auto 600%"
         loading="eager" interaction-prompt="none">
     </model-viewer>
 
@@ -109,70 +110,13 @@
             mobileOrbit: "0deg 75deg 155%",
             desktopOrbit: "0deg 75deg 175%",
             mobileTarget: "0m 0.15m 0m",
-            desktopTarget: "0m 0.12m 0m",
-            rotationSpeed: 8
+            desktopTarget: "0m 0.12m 0m"
         };
 
         const mv = document.querySelector('#clock-model');
 
-        mv.addEventListener('load', () => {
-            let s = 0;
-            const accel = setInterval(() => {
-                s += 0.2;
-                mv.rotationPerSecond = `${s}deg`;
-                if (s >= CONFIG.rotationSpeed) clearInterval(accel);
-            }, 100);
-        });
-
+        // Reset widoku do zbliżenia
         document.querySelector('#reset-view').onclick = () => {
             const isMob = window.innerWidth < 768;
             mv.cameraOrbit = isMob ? CONFIG.mobileOrbit : CONFIG.desktopOrbit;
-            mv.cameraTarget = isMob ? CONFIG.mobileTarget : CONFIG.desktopTarget;
-        };
-
-        const togglePanel = (id) => {
-            const p = document.getElementById(id);
-            const other = id === 'panel-alta' ? 'panel-czasowniki' : 'panel-alta';
-            document.getElementById(other).classList.remove('visible');
-            p.classList.toggle('visible');
-        };
-        document.getElementById('toggle-alta').onclick = () => togglePanel('panel-alta');
-        document.getElementById('toggle-czasowniki').onclick = () => togglePanel('panel-czasowniki');
-
-        document.getElementById('theme-toggle').onclick = () => {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            mv.exposure = isDark ? "1.8" : "2.8";
-            document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#121212' : '#ffffff');
-        };
-
-        const pauseBtn = document.getElementById('pause-toggle');
-        pauseBtn.onclick = () => {
-            const isP = pauseBtn.dataset.paused === "true";
-            if (!isP) {
-                mv.pause();
-                document.getElementById('icon-pause').style.display = 'none';
-                document.getElementById('icon-play').style.display = 'block';
-                pauseBtn.dataset.paused = "true";
-            } else {
-                mv.play();
-                document.getElementById('icon-pause').style.display = 'block';
-                document.getElementById('icon-play').style.display = 'none';
-                pauseBtn.dataset.paused = "false";
-            }
-        };
-
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        if (isMobile) {
-            document.getElementById('ar-label').style.display = 'flex';
-            document.getElementById('action-toggle').onclick = () => mv.activateAR();
-        } else {
-            document.getElementById('fs-icon').style.display = 'block';
-            document.getElementById('action-toggle').onclick = () => {
-                if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-                else document.exitFullscreen();
-            };
-        }
-    </script>
-</body>
-</html>
+            mv.cameraTarget = isMob ? CONFIG.mobileTarget : CONFIG
