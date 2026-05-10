@@ -95,32 +95,37 @@
         id="clock-model"
         src="ALTA.glb" 
         ar ar-modes="webxr scene-viewer quick-look" 
-        camera-controls disable-pan
+        camera-controls
         shadow-intensity="1" shadow-softness="1"
         exposure="1.8" environment-intensity="1.5"
         autoplay 
         animation-crossfade-duration="0"
         auto-rotate="false" 
-        camera-orbit="0deg 75deg 175%" camera-target="0m 0.12m 0m"
-        loading="eager" interaction-prompt="none">
+        loading="eager" 
+        interaction-prompt="none">
     </model-viewer>
 
     <script>
-        const CONFIG = {
-            mobileOrbit: "0deg 75deg 155%",
-            desktopOrbit: "0deg 75deg 175%",
-            mobileTarget: "0m 0.15m 0m",
-            desktopTarget: "0m 0.12m 0m"
-        };
-
         const mv = document.querySelector('#clock-model');
 
-        // Reset widoku do zbliżenia
-        document.querySelector('#reset-view').onclick = () => {
-            const isMob = window.innerWidth < 768;
-            mv.cameraOrbit = isMob ? CONFIG.mobileOrbit : CONFIG.desktopOrbit;
-            mv.cameraTarget = isMob ? CONFIG.mobileTarget : CONFIG.desktopTarget;
+        // TO JEST TWOJA "WERSJA ZERO" - JEDEN PUNKT ODNIESIENIA
+        const VIEW_ZERO = {
+            orbit: "-20deg 65deg 145%", // 145% żeby zegar był mniejszy i mieścił się cały
+            target: "0m 0.15m 0m"
         };
+
+        // Funkcja która ustawia kamerę na sztywno
+        const applyViewZero = () => {
+            mv.cameraOrbit = VIEW_ZERO.orbit;
+            mv.cameraTarget = VIEW_ZERO.target;
+            mv.jumpCameraToGoal(); 
+        };
+
+        // 1. Ustaw widok przy ładowaniu
+        mv.addEventListener('load', applyViewZero);
+
+        // 2. Ustaw widok przy kliknięciu Reset
+        document.querySelector('#reset-view').onclick = applyViewZero;
 
         // Panele info
         const togglePanel = (id) => {
@@ -132,7 +137,7 @@
         document.getElementById('toggle-alta').onclick = () => togglePanel('panel-alta');
         document.getElementById('toggle-czasowniki').onclick = () => togglePanel('panel-czasowniki');
 
-        // Dark/Light mode
+        // Dark mode
         document.getElementById('theme-toggle').onclick = () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -140,24 +145,24 @@
             document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#121212' : '#ffffff');
         };
 
-        // Pauza animacji wskazówek
+        // Pause
         const pauseBtn = document.getElementById('pause-toggle');
         pauseBtn.onclick = () => {
-            const isP = pauseBtn.dataset.paused === "true";
+            const isP = (pauseBtn.getAttribute('data-paused') === "true");
             if (!isP) {
                 mv.pause();
                 document.getElementById('icon-pause').style.display = 'none';
                 document.getElementById('icon-play').style.display = 'block';
-                pauseBtn.dataset.paused = "true";
+                pauseBtn.setAttribute('data-paused', "true");
             } else {
                 mv.play();
                 document.getElementById('icon-pause').style.display = 'block';
                 document.getElementById('icon-play').style.display = 'none';
-                pauseBtn.dataset.paused = "false";
+                pauseBtn.setAttribute('data-paused', "false");
             }
         };
 
-        // AR lub Fullscreen
+        // AR/FS
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         if (isMobile) {
             document.getElementById('ar-label').style.display = 'flex';
