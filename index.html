@@ -95,7 +95,9 @@
         id="clock-model"
         src="ALTA.glb" 
         ar ar-modes="webxr scene-viewer quick-look" 
-        camera-controls disable-pan
+        camera-controls
+        min-camera-orbit="auto auto auto"
+        max-camera-orbit="auto auto 600%"
         shadow-intensity="1" shadow-softness="1"
         exposure="1.8" environment-intensity="1.5"
         autoplay 
@@ -108,21 +110,22 @@
 
     <script>
         const CONFIG = {
-            // Reset do wersji oddalonej (Wersja 0)
-            mobileResetOrbit: "0deg 65deg 210%", 
-            desktopResetOrbit: "0deg 65deg 230%",
-            mobileTarget: "0m 0.15m 0m",
-            desktopTarget: "0m 0.15m 0m"
+            // "Wersja 0" - Szeroki kadr po kliknięciu resetu
+            mobileResetOrbit: "0deg 75deg 210%", 
+            desktopResetOrbit: "0deg 75deg 230%",
+            target: "0m 0.15m 0m"
         };
 
         const mv = document.querySelector('#clock-model');
 
+        // Funkcja Resetu
         document.querySelector('#reset-view').onclick = () => {
             const isMob = window.innerWidth < 768;
             mv.cameraOrbit = isMob ? CONFIG.mobileResetOrbit : CONFIG.desktopResetOrbit;
-            mv.cameraTarget = isMob ? CONFIG.mobileTarget : CONFIG.desktopTarget;
+            mv.cameraTarget = CONFIG.target;
         };
 
+        // Panele info
         const togglePanel = (id) => {
             const p = document.getElementById(id);
             const other = id === 'panel-alta' ? 'panel-czasowniki' : 'panel-alta';
@@ -132,6 +135,7 @@
         document.getElementById('toggle-alta').onclick = () => togglePanel('panel-alta');
         document.getElementById('toggle-czasowniki').onclick = () => togglePanel('panel-czasowniki');
 
+        // Dark mode
         document.getElementById('theme-toggle').onclick = () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -139,6 +143,7 @@
             document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#121212' : '#ffffff');
         };
 
+        // Pause
         const pauseBtn = document.getElementById('pause-toggle');
         pauseBtn.onclick = () => {
             const isP = (pauseBtn.getAttribute('data-paused') === "true");
@@ -155,6 +160,7 @@
             }
         };
 
+        // AR/FS
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         if (isMobile) {
             document.getElementById('ar-label').style.display = 'flex';
