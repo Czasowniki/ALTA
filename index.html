@@ -96,32 +96,32 @@
         src="ALTA.glb" 
         ar ar-modes="webxr scene-viewer quick-look" 
         camera-controls
-        min-camera-orbit="auto auto 0.2m"
+        min-camera-orbit="auto auto 0.1m"
         max-camera-orbit="auto auto 2m"
         shadow-intensity="1" shadow-softness="1"
         exposure="1.8" environment-intensity="1.5"
         autoplay 
         animation-crossfade-duration="0"
         auto-rotate="false" 
-        camera-orbit="-20deg 65deg 0.6m" 
+        camera-orbit="-20deg 65deg 0.42m" 
         camera-target="0m 0.15m 0m"
         loading="eager" interaction-prompt="none">
     </model-viewer>
 
     <script>
-        // TE WARTOŚCI SĄ IDENTYCZNE Z TYMI W MODEL-VIEWER
-        const BASE_ORBIT = "-20deg 65deg 0.6m";
-        const BASE_TARGET = "0m 0.15m 0m";
+        // TE WARTOŚCI SĄ TERAZ IDENTYCZNE W METRACH
+        const GOAL_ORBIT = "-20deg 65deg 0.42m";
+        const GOAL_TARGET = "0m 0.15m 0m";
 
         const mv = document.querySelector('#clock-model');
 
-        // Funkcja Resetu - Teraz używa tych samych jednostek miary
         document.querySelector('#reset-view').onclick = () => {
-            mv.cameraOrbit = BASE_ORBIT;
-            mv.cameraTarget = BASE_TARGET;
+            // CAŁKOWITE CZYSZCZENIE STANU KAMERY PRZED RESETEM
+            mv.cameraOrbit = GOAL_ORBIT;
+            mv.cameraTarget = GOAL_TARGET;
+            mv.jumpCameraToGoal(); // Wymusza natychmiastowe dociągnięcie kamery do celu
         };
 
-        // Panele info
         const togglePanel = (id) => {
             const p = document.getElementById(id);
             const other = id === 'panel-alta' ? 'panel-czasowniki' : 'panel-alta';
@@ -131,7 +131,6 @@
         document.getElementById('toggle-alta').onclick = () => togglePanel('panel-alta');
         document.getElementById('toggle-czasowniki').onclick = () => togglePanel('panel-czasowniki');
 
-        // Dark mode
         document.getElementById('theme-toggle').onclick = () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -139,7 +138,6 @@
             document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#121212' : '#ffffff');
         };
 
-        // Pause
         const pauseBtn = document.getElementById('pause-toggle');
         pauseBtn.onclick = () => {
             const isP = (pauseBtn.getAttribute('data-paused') === "true");
@@ -156,7 +154,6 @@
             }
         };
 
-        // AR/FS
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         if (isMobile) {
             document.getElementById('ar-label').style.display = 'flex';
