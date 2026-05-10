@@ -101,6 +101,8 @@
         autoplay 
         animation-crossfade-duration="0"
         auto-rotate="false" 
+        camera-orbit="-20deg 65deg 185%" 
+        camera-target="0m 0.15m 0m"
         loading="eager" 
         interaction-prompt="none">
     </model-viewer>
@@ -108,24 +110,15 @@
     <script>
         const mv = document.querySelector('#clock-model');
 
-        // TO JEST TWOJA "WERSJA ZERO" - JEDEN PUNKT ODNIESIENIA
-        const VIEW_ZERO = {
-            orbit: "-20deg 65deg 145%", // 145% żeby zegar był mniejszy i mieścił się cały
-            target: "0m 0.15m 0m"
+        // FUNKCJA RESETU: Wymuszamy te same wartości co w HTML
+        const resetToZero = () => {
+            mv.fieldOfView = "auto"; // Twardy reset zoomu
+            mv.cameraOrbit = "-20deg 65deg 185%";
+            mv.cameraTarget = "0m 0.15m 0m";
+            mv.jumpCameraToGoal();
         };
 
-        // Funkcja która ustawia kamerę na sztywno
-        const applyViewZero = () => {
-            mv.cameraOrbit = VIEW_ZERO.orbit;
-            mv.cameraTarget = VIEW_ZERO.target;
-            mv.jumpCameraToGoal(); 
-        };
-
-        // 1. Ustaw widok przy ładowaniu
-        mv.addEventListener('load', applyViewZero);
-
-        // 2. Ustaw widok przy kliknięciu Reset
-        document.querySelector('#reset-view').onclick = applyViewZero;
+        document.querySelector('#reset-view').onclick = resetToZero;
 
         // Panele info
         const togglePanel = (id) => {
