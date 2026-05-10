@@ -96,6 +96,7 @@
         src="ALTA.glb" 
         ar ar-modes="webxr scene-viewer quick-look" 
         camera-controls
+        max-camera-orbit="auto auto 400%"
         shadow-intensity="1" shadow-softness="1"
         exposure="1.8" environment-intensity="1.5"
         autoplay 
@@ -110,9 +111,8 @@
     <script>
         const mv = document.querySelector('#clock-model');
 
-        // FUNKCJA RESETU: Wymuszamy te same wartości co w HTML
         const resetToZero = () => {
-            mv.fieldOfView = "auto"; // Twardy reset zoomu
+            mv.fieldOfView = "auto"; 
             mv.cameraOrbit = "-20deg 65deg 185%";
             mv.cameraTarget = "0m 0.15m 0m";
             mv.jumpCameraToGoal();
@@ -120,7 +120,6 @@
 
         document.querySelector('#reset-view').onclick = resetToZero;
 
-        // Panele info
         const togglePanel = (id) => {
             const p = document.getElementById(id);
             const other = id === 'panel-alta' ? 'panel-czasowniki' : 'panel-alta';
@@ -130,7 +129,6 @@
         document.getElementById('toggle-alta').onclick = () => togglePanel('panel-alta');
         document.getElementById('toggle-czasowniki').onclick = () => togglePanel('panel-czasowniki');
 
-        // Dark mode
         document.getElementById('theme-toggle').onclick = () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -138,7 +136,6 @@
             document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#121212' : '#ffffff');
         };
 
-        // Pause
         const pauseBtn = document.getElementById('pause-toggle');
         pauseBtn.onclick = () => {
             const isP = (pauseBtn.getAttribute('data-paused') === "true");
@@ -155,7 +152,6 @@
             }
         };
 
-        // AR/FS
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         if (isMobile) {
             document.getElementById('ar-label').style.display = 'flex';
